@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/github_redirect"
+        android:icon="@drawable/github"
+        app:showAsAction="always"
+        android:title="@string/github" />
+
+    <item
+        android:id="@+id/search_item"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView"/>
+
+
+    <item
+        android:icon="@drawable/ic_sort"
+        android:title="@string/sort"
+        app:showAsAction="always">
+
+        <menu>
+
+            <item
+                android:id="@+id/sort_by_name"
+                android:title="@string/sort_by_name"/>
+
+            <item
+                android:id="@+id/sort_by_todo_date"
+                android:title="@string/sort_by_todo_date"/>
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/hide_completed"
+        android:checkable="true"
+        android:title="@string/hide_completed"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/delete_completed"
+        android:title="@string/delete_completed"
+        app:showAsAction="never"/>
+
+</menu>
