@@ -10,12 +10,16 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codinginflow.mvvmtodo.R
+import com.codinginflow.mvvmtodo.data.PreferencesManager
 import com.codinginflow.mvvmtodo.databinding.TasksFragmentBinding
 import com.codinginflow.mvvmtodo.ui.tasks.adapters.TaskAdapter
 import com.codinginflow.mvvmtodo.utils.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TaskFragment : Fragment(R.layout.tasks_fragment) {
@@ -53,6 +57,11 @@ class TaskFragment : Fragment(R.layout.tasks_fragment) {
         searchView.onQueryTextChanged {
             viewModel.searchQuery.value = it
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            menu.findItem(R.id.hide_completed).isChecked =
+                viewModel.preferencesFlow.first().hideCompleted
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -64,20 +73,22 @@ class TaskFragment : Fragment(R.layout.tasks_fragment) {
             }
 
             R.id.sort_by_name -> {
+
+                viewModel.onSortOrderSelected(PreferencesManager.SortOrder.BY_NAME)
                 true
-                //TODO
             }
 
            R.id.sort_by_todo_date -> {
+
+               viewModel.onSortOrderSelected(PreferencesManager.SortOrder.BY_DATE)
                true
-               // TODO
            }
 
            R.id.hide_completed -> {
 
                item.isChecked = !item.isChecked
+               viewModel.onHideCompletedClick(item.isChecked)
                true
-               // TODO
            }
 
            R.id.delete_completed -> {
