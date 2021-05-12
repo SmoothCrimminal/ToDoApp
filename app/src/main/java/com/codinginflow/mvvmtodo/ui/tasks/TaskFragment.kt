@@ -11,6 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ import com.codinginflow.mvvmtodo.data.PreferencesManager
 import com.codinginflow.mvvmtodo.data.Task
 import com.codinginflow.mvvmtodo.databinding.TasksFragmentBinding
 import com.codinginflow.mvvmtodo.ui.tasks.adapters.TaskAdapter
+import com.codinginflow.mvvmtodo.utils.exhaustive
 import com.codinginflow.mvvmtodo.utils.onQueryTextChanged
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +61,10 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TaskAdapter.OnItemClickL
                     viewModel.onTaskSwiped(task)
                 }
             }).attachToRecyclerView(recycleViewTasks)
+
+            fabAddTask.setOnClickListener{
+                viewModel.onAddNewTaskClick()
+            }
         }
 
         viewModel.tasks.observe(viewLifecycleOwner) {
@@ -74,7 +80,15 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TaskAdapter.OnItemClickL
                                 viewModel.onUndoDeleteClick(event.task)
                             }.show()
                     }
-                }
+                    is TasksViewModel.TaskEvent.NavigateToAddTaskScreen -> {
+                        val action = TaskFragmentDirections.actionTaskFragmentToAddTaskFragment(null, "New Task")
+                        findNavController().navigate(action)
+                    }
+                    is TasksViewModel.TaskEvent.NavigateToEditTaskScreen -> {
+                        val action = TaskFragmentDirections.actionTaskFragmentToAddTaskFragment(event.task, "Edit Task")
+                        findNavController().navigate(action)
+                    }
+                }.exhaustive
             }
         }
 
