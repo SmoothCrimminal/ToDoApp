@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_marginStart="8dp"
         android:minWidth="0dp"
         android:minHeight="0dp" />
 
@@ -18,12 +19,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/checkbox_completed"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="-11dp"
         android:layout_toStartOf="@id/label_priority"
         android:layout_toEndOf="@id/checkbox_completed"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
         android:textColor="@color/black"
+        android:textSize="17sp"
         tools:text="Example item" />
 
     <ImageView

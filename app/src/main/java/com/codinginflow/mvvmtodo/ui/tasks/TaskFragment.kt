@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -67,6 +68,11 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TaskAdapter.OnItemClickL
             }
         }
 
+        setFragmentResultListener("add_task_request") {_, bundle ->
+            val result = bundle.getInt("add_task_result")
+            viewModel.onAddEditResult(result)
+        }
+
         viewModel.tasks.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
         }
@@ -86,6 +92,13 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TaskAdapter.OnItemClickL
                     }
                     is TasksViewModel.TaskEvent.NavigateToEditTaskScreen -> {
                         val action = TaskFragmentDirections.actionTaskFragmentToAddTaskFragment(event.task, "Edit Task")
+                        findNavController().navigate(action)
+                    }
+                    is TasksViewModel.TaskEvent.ShowTaskSavedConfirmationMessage -> {
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                    }
+                    is TasksViewModel.TaskEvent.NavigateToDeletedAllCompletedScreen -> {
+                        val action = TaskFragmentDirections.actionGlobalDeleteAllCompletedDialogFragment()
                         findNavController().navigate(action)
                     }
                 }.exhaustive
@@ -147,8 +160,8 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TaskAdapter.OnItemClickL
            }
 
            R.id.delete_completed -> {
+               viewModel.onDeletedAllCompletedClick()
                true
-               // TODO
            }
 
            else -> super.onOptionsItemSelected(item)
